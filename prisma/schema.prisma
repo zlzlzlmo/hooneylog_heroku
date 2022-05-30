@@ -10,8 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model PostViews {
-  id      Int    @id @default(autoincrement())
-  post_id String
+model PostView {
+  post_id String @unique
   views   Int    @default(0)
 }
