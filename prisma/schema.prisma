@@ -14,3 +14,13 @@ model PostView {
   post_id String @unique
   views   Int    @default(0)
 }
+
+model User {
+  id        Int    @id @default(autoincrement())
+  user_id   String @unique
+  password  String
+  nick_name String @unique
+
+
+  @@unique([user_id, nick_name, id])
+}
