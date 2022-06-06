@@ -11,22 +11,23 @@ import {
 import { User, UserInfo } from 'src/decorators/user.decorator';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { CommentsService } from './comments.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateReplyDto } from './dto/create-reply.dto';
+import { CreateReplyAgainDto } from './dto/create-replyAgain.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
-@Controller('comments')
+@UseGuards(AuthGuard)
+@Controller('reply')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto, @User() user: UserInfo) {
-    return this.commentsService.create(createCommentDto, user.userId);
+  create(@Body() body: CreateReplyDto, @User() user: UserInfo) {
+    return this.commentsService.create(body, user.userId);
   }
 
-  @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  @Post('again')
+  createReply(@Body() body: CreateReplyAgainDto, @User() user: UserInfo) {
+    return this.commentsService.createReply(body, user.userId);
   }
 
   @Get(':id')

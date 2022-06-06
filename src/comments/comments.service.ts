@@ -1,20 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateReplyDto } from './dto/create-reply.dto';
+import { CreateReplyAgainDto } from './dto/create-replyAgain.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Injectable()
 export class CommentsService {
   constructor(private readonly prismaService: PrismaService) {}
-  async create({ postId, comment }: CreateCommentDto, userId: string) {
-    console.log('userId : ', userId);
-    const cmt = await this.prismaService.comment.create({
+  async create({ postId, comment }: CreateReplyDto, userId: string) {
+    const cmt = await this.prismaService.reply.create({
       data: {
         post_id: postId,
         comment,
         user_id: userId,
       },
     });
+    return cmt;
+  }
+
+  async createReply(
+    { postId, parentId, comment, author }: CreateReplyAgainDto,
+    userId: string,
+  ) {
+    const cmt = await this.prismaService.replyAgain.create({
+      data: {
+        post_id: postId,
+        comment,
+        user_id: userId,
+        parent_id: parentId,
+        author,
+      },
+    });
+
     return cmt;
   }
 

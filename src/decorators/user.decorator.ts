@@ -10,7 +10,7 @@ export interface UserInfo {
 export const User = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();
-    console.log('user 정보 : ', request.user);
+
     return request.user as UserInfo;
   },
 );
