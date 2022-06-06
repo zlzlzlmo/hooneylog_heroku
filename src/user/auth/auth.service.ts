@@ -10,7 +10,7 @@ import { UserService } from '../user.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import JWT from 'src/common/jwt';
-import { SignInUserDto } from '../dtos/signin-user.dto';
+import { SignInResponseDto, SignInUserDto } from '../dtos/signin-user.dto';
 
 const scrypt = promisify(_scrypt);
 
@@ -71,7 +71,12 @@ export class AuthService {
       throw new BadRequestException('비밀번호가 틀렸습니다.');
     }
 
-    return new JWT(user.id, user.nick_name).generateJWT();
+    const token = await new JWT(user.id, user.nick_name).generateJWT();
+
+    return new SignInResponseDto({
+      message: '로그인 성공',
+      token,
+    });
   }
 
   private async hash(password: string, salt: string): Promise<string> {

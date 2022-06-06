@@ -6,7 +6,7 @@ class JWT {
     private readonly nickName: string,
   ) {}
   async generateJWT() {
-    const token = await jwt.sign(
+    const token: string = await jwt.sign(
       {
         userId: this.userId,
         nickName: this.nickName,
