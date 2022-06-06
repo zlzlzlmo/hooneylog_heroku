@@ -10,6 +10,7 @@ import { UserService } from '../user.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import JWT from 'src/common/jwt';
+import { SignInUserDto } from '../dtos/signin-user.dto';
 
 const scrypt = promisify(_scrypt);
 
@@ -21,10 +22,10 @@ export class AuthService {
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
-    const { userId, password, nickName } = createUserDto;
+    const { id, password, nickName } = createUserDto;
     const idExist = await this.prismaService.user.findUnique({
       where: {
-        user_id: userId,
+        id,
       },
     });
 
@@ -48,7 +49,7 @@ export class AuthService {
     const secretPassword = salt + '.' + hash;
 
     const user = this.userService.create({
-      userId,
+      id,
       password: secretPassword,
       nickName,
     });
@@ -56,8 +57,8 @@ export class AuthService {
     return user;
   }
 
-  async signin(userId: string, password: string) {
-    const user = await this.userService.findOne(userId);
+  async signin({ id, password }: SignInUserDto) {
+    const user = await this.userService.findOne(id);
     if (!user) {
       throw new NotFoundException('해당하는 유저가 존재하지 않습니다');
     }
@@ -70,7 +71,7 @@ export class AuthService {
       throw new BadRequestException('비밀번호가 틀렸습니다.');
     }
 
-    return new JWT(user.user_id, user.nick_name).generateJWT();
+    return new JWT(user.id, user.nick_name).generateJWT();
   }
 
   private async hash(password: string, salt: string): Promise<string> {

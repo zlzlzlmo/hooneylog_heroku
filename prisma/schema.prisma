@@ -16,11 +16,20 @@ model PostView {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
-  user_id   String @unique
+  id        String    @id @unique
   password  String
-  nick_name String @unique
+  nick_name String    @unique
+  comments  Comment[]
+}
 
-
-  @@unique([user_id, nick_name, id])
+model Comment {
+  id         Int      @id @default(autoincrement())
+  post_id    String
+  parent_id  Int      @default(autoincrement())
+  comment    String
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [nick_name])
+  is_deleted Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }

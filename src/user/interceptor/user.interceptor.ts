@@ -8,9 +8,13 @@ export class UserInterceptor implements NestInterceptor {
     next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
-    const token = request?.headers?.autorization.split('Bearer ')[1];
-    const user = jwt.decode(token);
-    request.user = user;
+
+    if (request.headers.authorization) {
+      const token = request?.headers?.authorization.split('Bearer ')[1];
+      const user = jwt.decode(token);
+      request.user = user;
+    }
+
     return next.handle();
   }
 }

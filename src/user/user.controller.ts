@@ -15,7 +15,6 @@ export class UserController {
 
   @Post('signin')
   signIn(@Body() body: SignInUserDto) {
-    console.log('signin');
-    return this.authService.signin(body.userId, body.password);
+    return this.authService.signin(body);
   }
 }
