@@ -10,7 +10,8 @@ import { UserService } from '../user.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import JWT from 'src/common/jwt';
-import { SignInResponseDto, SignInUserDto } from '../dtos/signin-user.dto';
+import { SignInUserDto } from '../dtos/signin-user.dto';
+import { JwtResponseDto } from '../dtos/jwt-user.dto';
 
 const scrypt = promisify(_scrypt);
 
@@ -48,13 +49,16 @@ export class AuthService {
     const hash = await this.hash(password, salt);
     const secretPassword = salt + '.' + hash;
 
-    const user = this.userService.create({
+    const token = await this.userService.create({
       id,
       password: secretPassword,
       nickName,
     });
 
-    return user;
+    return new JwtResponseDto({
+      message: '회원가입 성공',
+      token,
+    });
   }
 
   async signin({ id, password }: SignInUserDto) {
@@ -73,7 +77,7 @@ export class AuthService {
 
     const token = await new JWT(user.id, user.nick_name).generateJWT();
 
-    return new SignInResponseDto({
+    return new JwtResponseDto({
       message: '로그인 성공',
       token,
     });
