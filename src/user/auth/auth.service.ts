@@ -4,7 +4,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UserService } from '../user.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
@@ -17,32 +16,25 @@ const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userService: UserService,
-    private readonly prismaService: PrismaService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   async signup(createUserDto: CreateUserDto) {
     const { id, password, nickName } = createUserDto;
-    const idExist = await this.prismaService.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    const idExist = await this.userService.findOne(id);
 
     if (idExist) {
       throw new ConflictException('이미 존재하는 아이디입니다.');
     }
 
-    const nickExist = await this.prismaService.user.findUnique({
-      where: {
-        nick_name: nickName,
-      },
-    });
+    // const nickExist = await this.prismaService.user.findUnique({
+    //   where: {
+    //     nick_name: nickName,
+    //   },
+    // });
 
-    if (nickExist) {
-      throw new ConflictException('이미 존재하는 닉네임입니다.');
-    }
+    // if (nickExist) {
+    //   throw new ConflictException('이미 존재하는 닉네임입니다.');
+    // }
 
     const salt = randomBytes(8).toString('hex');
 
