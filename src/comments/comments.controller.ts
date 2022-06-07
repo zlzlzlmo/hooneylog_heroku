@@ -8,8 +8,8 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { User, UserInfo } from 'src/decorators/user.decorator';
-import { AuthGuard } from 'src/guard/auth.guard';
+import { User, UserInfo } from 'decorators/user.decorator';
+import { AuthGuard } from 'guard/auth.guard';
 import { CommentsService } from './comments.service';
 import { CreateReplyDto } from './dto/create-reply.dto';
 import { CreateReplyAgainDto } from './dto/create-replyAgain.dto';

@@ -1,6 +1,6 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
-import JWT from 'src/common/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
+import JWT from '../common/jwt';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 
 @Injectable()

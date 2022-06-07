@@ -8,7 +8,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { UserService } from '../user.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
-import JWT from 'src/common/jwt';
+import JWT from '../../common/jwt';
 import { SignInUserDto } from '../dtos/signin-user.dto';
 import { JwtResponseDto } from '../dtos/jwt-user.dto';
 
