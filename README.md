@@ -19,8 +19,7 @@ HooneyLog 백엔드는 Notion API를 활용하여 게시물 데이터를 효율�
 
 - **백엔드 프레임워크**: NestJS
 - **데이터 관리**: Notion API
-- **테스트**: Jest
-- **배포**: Heroku
+- **배포**: Railway
 - **언어 및 도구**: TypeScript, Node.js
 
 ---
@@ -42,7 +41,6 @@ backend/
 │   ├── app.module.ts           # 애플리케이션 루트 모듈
 │   ├── app.service.ts          # 기본 앱 서비스
 │   └── main.ts                 # 애플리케이션 엔트리포인트
-├── test/                       # 테스트 코드
 ├── .env                        # 환경 변수 파일
 ├── tsconfig.json               # TypeScript 설정
 └── package.json                # 의존성 관리
