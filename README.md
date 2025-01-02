@@ -1,73 +1,177 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# HooneyLog Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> **NestJS 기반의 안정적이고 확장 가능한 백엔드 시스템**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+HooneyLog 백엔드는 Notion API를 활용하여 게시물 데이터를 효율적으로 관리하고, 사용자 요청에 맞는 데이터를 제공하기 위해 설계되었습니다. NestJS 프레임워크를 기반으로 구축되었으며, 클린 코드와 모듈화된 구조를 바탕으로 확장성과 유지보수성을 높였습니다.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📌 **주요 기능**
 
-## Installation
+- **게시물 관리**: Notion API를 사용하여 게시물 데이터 생성, 조회 및 관리.
+- **API 설계**: 클린 아키텍처를 기반으로 한 RESTful API 설계.
+- **블록 데이터 처리**: Notion 블록 데이터를 효율적으로 수집하고 반환.
+- **환경 변수 관리**: 안전한 API 키 관리 및 배포 환경 구성.
 
-```bash
-$ npm install
+---
+
+## 🛠 **기술 스택**
+
+- **백엔드 프레임워크**: NestJS
+- **데이터 관리**: Notion API
+- **테스트**: Jest
+- **배포**: Heroku
+- **언어 및 도구**: TypeScript, Node.js
+
+---
+
+## 📂 **프로젝트 구조**
+
+```
+backend/
+├── src/
+│   ├── common/                # 공통 인터페이스 및 유틸리티
+│   │   ├── interface/         # 데이터 인터페이스
+│   │   └── notionBlock/       # Notion 블록 처리 유틸리티
+│   ├── notion/                # Notion API 관련 모듈
+│   │   ├── notion.controller.ts # 컨트롤러 (라우팅 처리)
+│   │   ├── notion.service.ts    # 서비스 (비즈니스 로직)
+│   │   ├── notion.module.ts     # 모듈 설정
+│   │   └── notion.controller.spec.ts # 테스트 파일
+│   ├── app.controller.ts       # 기본 앱 컨트롤러
+│   ├── app.module.ts           # 애플리케이션 루트 모듈
+│   ├── app.service.ts          # 기본 앱 서비스
+│   └── main.ts                 # 애플리케이션 엔트리포인트
+├── test/                       # 테스트 코드
+├── .env                        # 환경 변수 파일
+├── tsconfig.json               # TypeScript 설정
+└── package.json                # 의존성 관리
 ```
 
-## Running the app
+---
+
+## 🔗 **API 관리**
+
+### **API 구조**
+
+- **라우트**:
+
+  - `/notion/all`: 모든 게시물 데이터 가져오기
+  - `/notion/:id`: 특정 게시물 가져오기
+  - `/notion/blocks/:id`: 특정 게시물의 블록 데이터 가져오기
+
+- **컨트롤러**:
+
+  ```typescript
+  @Controller('notion')
+  export class NotionController {
+    constructor(private readonly notionService: NotionService) {}
+
+    @Get('all')
+    getAllPost() {
+      return this.notionService.getAllPost();
+    }
+
+    @Get(':id')
+    getPostById(@Param('id') id: string) {
+      return this.notionService.getPostById(id);
+    }
+
+    @Get('blocks/:id')
+    getBlocksById(@Param('id') id: string) {
+      return this.notionService.getBlocksById(id);
+    }
+  }
+  ```
+
+- **서비스 로직**:
+
+  ```typescript
+  @Injectable()
+  export class NotionService {
+    private readonly notion: Client;
+    private readonly databaseId = process.env.PUBLIC_NOTION_DATABASE ?? '';
+
+    constructor() {
+      this.notion = new Client({
+        auth: process.env.PUBLIC_NOTION_KEY,
+      });
+    }
+
+    // 모든 포스터 불러오기
+    async getAllPost() {
+      const response = await this.notion.databases.query({
+        database_id: this.databaseId,
+        filter: {
+          property: 'status',
+          select: { equals: 'published' },
+        },
+      });
+      return response.results;
+    }
+
+    // 아이디 받아서 한개의 포스터 불러오기
+    async getPostById(postId: string) {
+      const posts = await this.getAllPost();
+      return posts.find(({ id }) => id === postId);
+    }
+
+    // 해당 포스터의 block 값들 불러오기 (각종 요소들)
+    async getBlocksById(blockId: string) {
+      const blocks = [];
+      let cursor;
+
+      while (true) {
+        const { results, next_cursor } = await this.notion.blocks.children.list(
+          {
+            block_id: blockId,
+            start_cursor: cursor,
+          },
+        );
+        blocks.push(...results);
+        if (!next_cursor) break;
+        cursor = next_cursor;
+      }
+      return blocks;
+    }
+  }
+  ```
+
+---
+
+## 🧑‍💻 **설치 및 실행**
+
+### 1. 레포지토리 클론
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/zlzlzlmo/hooneylog-backend.git
+cd hooneylog-backend
 ```
 
-## Test
+### 2. 의존성 설치
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Support
+### 3. 환경 변수 설정
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+`.env` 파일을 생성하고 Notion API 키와 관련 정보를 입력
 
-## Stay in touch
+### 4. 개발 서버 실행
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run start:dev
+```
 
-## License
+### 5. 테스트 실행
 
-Nest is [MIT licensed](LICENSE).
+```bash
+npm run test
+```
+
+### 6. 배포
+
+백엔드는 **Railway**를 활용하여 배포.
+
+---
